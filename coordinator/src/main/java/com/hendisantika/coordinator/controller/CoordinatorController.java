@@ -36,4 +36,15 @@ public class CoordinatorController {
         callRollback(transactionData);
         return "Transaction Rollback";
     }
+
+    private boolean callPreparePhase(TransactionData transactionData) {
+        try {
+            boolean isOrderSuccess = callServices("http://localhost:8081/prepare_order", transactionData);
+            boolean isPaymentSuccess = callServices("http://localhost:8082/prepare_paymnet", transactionData);
+
+            return isOrderSuccess && isPaymentSuccess;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }
