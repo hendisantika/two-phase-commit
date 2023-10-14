@@ -1,6 +1,7 @@
 package com.hendisantika.coordinator.controller;
 
 import com.hendisantika.coordinator.dto.TransactionData;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,6 +54,10 @@ public class CoordinatorController {
         boolean isPaymentSuccess = callServices("http://localhost:8082/commit_paymnet", transactionData);
 
         return isOrderSuccess && isPaymentSuccess;
+    }
 
+    private boolean callServices(String url, TransactionData transactionData) {
+        ResponseEntity<String> response = restTemplate.postForEntity(url, transactionData, String.class);
+        return response.getStatusCode().is2xxSuccessful();
     }
 }
