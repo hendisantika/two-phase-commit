@@ -1,5 +1,8 @@
 package com.hendisantika.coordinator.controller;
 
+import com.hendisantika.coordinator.dto.TransactionData;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,4 +21,19 @@ import org.springframework.web.client.RestTemplate;
 public class CoordinatorController {
 
     private final RestTemplate restTemplate = new RestTemplate();
+
+    @PostMapping("/initiate_2pc")
+    public String initiateTwoPhaseCommit(@RequestBody TransactionData transactionData) {
+        if (callPreparePhase(transactionData)) {
+            if (callCommitPhase(transactionData)) {
+                return "Transavction committed successfully.";
+            }
+
+            callRollback(transactionData);
+            return "Transaction Rollback";
+        }
+
+        callRollback(transactionData);
+        return "Transaction Rollback";
+    }
 }
