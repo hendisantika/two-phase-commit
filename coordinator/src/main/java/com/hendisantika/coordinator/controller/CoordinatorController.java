@@ -27,7 +27,7 @@ public class CoordinatorController {
     public String initiateTwoPhaseCommit(@RequestBody TransactionData transactionData) {
         if (callPreparePhase(transactionData)) {
             if (callCommitPhase(transactionData)) {
-                return "Transavction committed successfully.";
+                return "Transaction committed successfully.";
             }
 
             callRollback(transactionData);
@@ -41,7 +41,7 @@ public class CoordinatorController {
     private boolean callPreparePhase(TransactionData transactionData) {
         try {
             boolean isOrderSuccess = callServices("http://localhost:8081/prepare_order", transactionData);
-            boolean isPaymentSuccess = callServices("http://localhost:8082/prepare_paymnet", transactionData);
+            boolean isPaymentSuccess = callServices("http://localhost:8082/prepare_payment", transactionData);
 
             return isOrderSuccess && isPaymentSuccess;
         } catch (Exception e) {
@@ -51,7 +51,7 @@ public class CoordinatorController {
 
     private boolean callCommitPhase(TransactionData transactionData) {
         boolean isOrderSuccess = callServices("http://localhost:8081/commit_order", transactionData);
-        boolean isPaymentSuccess = callServices("http://localhost:8082/commit_paymnet", transactionData);
+        boolean isPaymentSuccess = callServices("http://localhost:8082/commit_payment", transactionData);
 
         return isOrderSuccess && isPaymentSuccess;
     }
