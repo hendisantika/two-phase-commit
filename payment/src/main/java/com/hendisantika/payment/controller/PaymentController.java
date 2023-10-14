@@ -68,4 +68,18 @@ public class PaymentController {
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Payment cannot be committed");
     }
+
+    @PostMapping("/rollback_payment")
+    public ResponseEntity<String> rollbackOrder(@RequestBody TransactionData transactionData) {
+        Payment order = paymentRepository.findByItem(transactionData.getItem());
+
+        if (order != null) {
+            order.setPreparationStatus(PaymentStatus.ROLLBACK.name());
+            paymentRepository.save(order);
+
+            return ResponseEntity.ok("Payment rolled back successfully");
+        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during Payment rollback");
+    }
 }
