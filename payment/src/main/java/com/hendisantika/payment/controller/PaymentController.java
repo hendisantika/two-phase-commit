@@ -54,4 +54,18 @@ public class PaymentController {
     private boolean shouldFailedDuringPrepare() {
         return false;
     }
+
+    @PostMapping("/commit_payment")
+    public ResponseEntity<String> commitOrder(@RequestBody TransactionData transactionData) {
+        Payment order = paymentRepository.findByItem(transactionData.getItem());
+
+        if (order != null && order.getPreparationStatus().equalsIgnoreCase(PaymentStatus.PENDING.name())) {
+            order.setPreparationStatus(PaymentStatus.APPROVED.name());
+            paymentRepository.save(order);
+
+            return ResponseEntity.ok("Payment committed successfully");
+        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Payment cannot be committed");
+    }
 }
