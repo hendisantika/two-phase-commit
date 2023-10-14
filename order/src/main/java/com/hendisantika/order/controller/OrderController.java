@@ -52,4 +52,18 @@ public class OrderController {
     private boolean shouldFailedDuringPrepare() {
         return false;
     }
+
+    @PostMapping("/commit_order")
+    public ResponseEntity<String> commitOrder(@RequestBody TransactionData transactionData) {
+        Order order = orderRepository.findByItem(transactionData.getItem());
+
+        if (order != null && order.getPreparationStatus().equalsIgnoreCase(OrderPreparationStatus.PREPARING.name())) {
+            order.setPreparationStatus(OrderPreparationStatus.COMMITTED.name());
+            orderRepository.save(order);
+
+            return ResponseEntity.ok("Order committed successfully");
+        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Order cannot be committed");
+    }
 }
