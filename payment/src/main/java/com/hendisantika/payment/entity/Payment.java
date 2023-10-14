@@ -1,4 +1,4 @@
-package com.hendisantika.payment.dto;
+package com.hendisantika.payment.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
