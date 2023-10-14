@@ -65,4 +65,8 @@ public class CoordinatorController {
         callServiceRollbackPhase("http://localhost:8081/rollback_order", transactionData);
         callServiceRollbackPhase("http://localhost:8082/rollback_paymnet", transactionData);
     }
+
+    private void callServiceRollbackPhase(String serviceUrl, TransactionData transactionData) {
+        restTemplate.postForEntity(serviceUrl, transactionData, Void.class);
+    }
 }
