@@ -66,4 +66,18 @@ public class OrderController {
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Order cannot be committed");
     }
+
+    @PostMapping("/rollback_order")
+    public ResponseEntity<String> rollbackOrder(@RequestBody TransactionData transactionData) {
+        Order order = orderRepository.findByItem(transactionData.getItem());
+
+        if (order != null) {
+            order.setPreparationStatus(OrderPreparationStatus.ROLLBACK.name());
+            orderRepository.save(order);
+
+            return ResponseEntity.ok("Order rolled back successfully");
+        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error during order rollback");
+    }
 }
