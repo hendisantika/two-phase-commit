@@ -47,4 +47,12 @@ public class CoordinatorController {
             return false;
         }
     }
+
+    private boolean callCommitPhase(TransactionData transactionData) {
+        boolean isOrderSuccess = callServices("http://localhost:8081/commit_order", transactionData);
+        boolean isPaymentSuccess = callServices("http://localhost:8082/commit_paymnet", transactionData);
+
+        return isOrderSuccess && isPaymentSuccess;
+
+    }
 }
