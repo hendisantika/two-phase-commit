@@ -60,4 +60,9 @@ public class CoordinatorController {
         ResponseEntity<String> response = restTemplate.postForEntity(url, transactionData, String.class);
         return response.getStatusCode().is2xxSuccessful();
     }
+
+    private void callRollback(TransactionData transactionData) {
+        callServiceRollbackPhase("http://localhost:8081/rollback_order", transactionData);
+        callServiceRollbackPhase("http://localhost:8082/rollback_paymnet", transactionData);
+    }
 }
