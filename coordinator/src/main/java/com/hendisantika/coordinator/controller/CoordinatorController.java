@@ -1,6 +1,7 @@
 package com.hendisantika.coordinator.controller;
 
 import com.hendisantika.coordinator.dto.TransactionData;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,9 +20,10 @@ import org.springframework.web.client.RestTemplate;
  * To change this template use File | Settings | File Templates.
  */
 @RestController
+@RequiredArgsConstructor
 public class CoordinatorController {
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
 
     @PostMapping("/initiate_2pc")
     public String initiateTwoPhaseCommit(@RequestBody TransactionData transactionData) {
@@ -63,7 +65,7 @@ public class CoordinatorController {
 
     private void callRollback(TransactionData transactionData) {
         callServiceRollbackPhase("http://localhost:8081/rollback_order", transactionData);
-        callServiceRollbackPhase("http://localhost:8082/rollback_paymnet", transactionData);
+        callServiceRollbackPhase("http://localhost:8082/rollback_payment", transactionData);
     }
 
     private void callServiceRollbackPhase(String serviceUrl, TransactionData transactionData) {
